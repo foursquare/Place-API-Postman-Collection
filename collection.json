@@ -1,0 +1,2305 @@
+{
+	"info": {
+		"_postman_id": "fc9b6f21-3511-42ef-9c96-b5dd8ec8ff85",
+		"name": "Foursquare Places API",
+		"description": "## API Status\nStatus for the API can be found at [status.foursquare.com](http://status.foursquare.com)!\n\n## Getting Started\nUsing Foursquare's Places API, you can do just about anything you can do on foursquare.com, while using your programming language of choice. The Foursquare API is a RESTful API based on HTTP requests and JSON responses.\n\nThis version of the API, version 2, uses OAuth 2.0. This means that all requests will need to be encrypted and sent via HTTPS. It also means that you need to register your application, even if you aren't allowing users to login.\n\nWe highly encourage looking at the endpoints in the Popular Endpoints folder first to evaluate if they suit your needs, before exploring the others.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Popular Endpoints",
+			"item": [
+				{
+					"name": "Search for Venues (intent: checkin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6d02e36a-e088-4ebe-93b9-79c928cdc83a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/search?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&ll=40.7099,-73.9622&intent=checkin&radius=200&query=peter luger steakhouse",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"search"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "ll",
+									"value": "40.7099,-73.9622",
+									"description": "REQUIRED unless near is provided. Latitude and longitude of the user’s location."
+								},
+								{
+									"key": "near",
+									"value": "new york",
+									"description": "REQUIRED unless ll is provided. A string naming a place in the world. If the near string is not geocodable, returns a failed_geocode error. Otherwise, searches within the bounds of the geocode and adds a geocode object to the response.",
+									"disabled": true
+								},
+								{
+									"key": "intent",
+									"value": "checkin",
+									"description": "Finds venues that the current user (or, for userless requests, a typical user) is likely to checkin to at the provided ll, at the current moment in time."
+								},
+								{
+									"key": "radius",
+									"value": "200",
+									"description": "Limit results to venues within this many meters of the specified location. Defaults to a city-wide area. Valid for requests with intent=checkin and categoryId or query. The maximum supported radius is currently 100,000 meters."
+								},
+								{
+									"key": "query",
+									"value": "peter luger steakhouse",
+									"description": "A search term to be applied against venue names.\n"
+								},
+								{
+									"key": "limit",
+									"value": "20",
+									"description": "Number of results to return, up to 50.",
+									"disabled": true
+								},
+								{
+									"key": "categoryId",
+									"value": "4d954b0ea243a5684a65b473",
+									"description": "A comma separated list of categories to limit results to. If you specify categoryId. Specifying a radius may improve results. If specifying a top-level category, all sub-categories will also match the query.",
+									"disabled": true
+								},
+								{
+									"key": "alt",
+									"value": "0",
+									"description": "Altitude of the user’s location, in meters.",
+									"disabled": true
+								},
+								{
+									"key": "llAcc",
+									"value": "10000",
+									"description": "Accuracy of latitude and longitude, in meters.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Returns a list of venues near the current location, optionally matching a search term.\n\nTo ensure the best possible results, pay attention to the intent parameter below.\n\nNote that most of the fields returned inside a venue can be optional. The user may create a venue that has no address, city, or state (the venue is created instead at the lat/long specified). Your client should handle these conditions safely. For more robust venue information (photos/tips/etc.), please see our venue details endpoint.\n\n#### Response Model: [Venues/Response Fields](https://developer.foursquare.com/docs/api/venues/search)"
+					},
+					"response": []
+				},
+				{
+					"name": "Search for Venues (intent: browse)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "03022bac-b74f-4ab5-9c50-bfffd0fbf1d5",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var venue_id = jsonData.response.venues[0].id;",
+									"var app_user_id = \"foursquare_postman_eoNXisMI\"",
+									"var currentDate = new Date();",
+									"var dd = currentDate.getDate();",
+									"var mm = currentDate.getMonth()+1;",
+									"var yyyy = currentDate.getFullYear();",
+									"",
+									"var hash = CryptoJS.HmacSHA256(app_user_id + venue_id + yyyy + mm + dd, \"secret\")",
+									"var visitSignature = CryptoJS.enc.Base64.stringify(hash);",
+									"",
+									"postman.setEnvironmentVariable(\"VENUE_ID\", venue_id);",
+									"postman.setEnvironmentVariable(\"requestId_select\", jsonData.meta.requestId);",
+									"postman.setEnvironmentVariable(\"visitSignature_select\", visitSignature);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/search?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&near=new york&intent=browse&radius=10000&query=peter luger steak house&limit=10",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"search"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "ll",
+									"value": "40.7099,-73.9622",
+									"description": "REQUIRED unless near is provided. Latitude and longitude of the user’s location. ",
+									"disabled": true
+								},
+								{
+									"key": "near",
+									"value": "new york",
+									"description": "REQUIRED unless ll is provided. A string naming a place in the world. If the near string is not geocodable, returns a failed_geocode error. Otherwise, searches within the bounds of the geocode and adds a geocode object to the response."
+								},
+								{
+									"key": "intent",
+									"value": "browse",
+									"description": "Find venues within a given area. Browse searches an entire region instead of only finding venues closest to a point. A region to search can be defined by including either the ll and radius parameters, or the sw and ne. The region will be circular if you include the ll and radius parameters, or a bounding box if you include the sw and ne parameters."
+								},
+								{
+									"key": "radius",
+									"value": "10000",
+									"description": "Limit results to venues within this many meters of the specified location. Defaults to a city-wide area. Valid for requests with intent=browse. The maximum supported radius is currently 100,000 meters."
+								},
+								{
+									"key": "sw",
+									"value": "40.707770, -73.970390",
+									"description": "With ne, limits results to the bounding box defined by the latitude and longitude given by sw as its south-west corner, and ne as its north-east corner. Not valid with ll or radius. Bounding boxes with an area up to approximately 10,000 square kilometers are supported.",
+									"disabled": true
+								},
+								{
+									"key": "ne",
+									"value": "40.712388, -73.956614",
+									"description": "See sw",
+									"disabled": true
+								},
+								{
+									"key": "query",
+									"value": "peter luger steak house",
+									"description": "A search term to be applied against venue names."
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Number of results to return, up to 50.\n"
+								},
+								{
+									"key": "categoryId",
+									"value": "4d954b0ea243a5684a65b473",
+									"description": "A comma separated list of categories to limit results to. If you specify categoryId. Specifying a radius may improve results. If specifying a top-level category, all sub-categories will also match the query.",
+									"disabled": true
+								},
+								{
+									"key": "llAcc",
+									"value": "10000.0",
+									"description": "Accuracy of latitude and longitude, in meters.",
+									"disabled": true
+								},
+								{
+									"key": "alt",
+									"value": "0",
+									"description": "Altitude of the user’s location, in meters.",
+									"disabled": true
+								},
+								{
+									"key": "altAcc",
+									"value": "10000.0",
+									"description": "Accuracy of the user’s altitude, in meters.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Returns a list of venues near the current location, optionally matching a search term.\n\nTo ensure the best possible results, pay attention to the intent parameter below.\n\nNote that most of the fields returned inside a venue can be optional. The user may create a venue that has no address, city, or state (the venue is created instead at the lat/long specified). Your client should handle these conditions safely. For more robust venue information (photos/tips/etc.), please see our venue details endpoint.\n\n#### Response Model: [Venues/Response Fields](https://developer.foursquare.com/docs/api/venues/search)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Details of a Venue",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/{{VENUE_ID}}?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"{{VENUE_ID}}"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "locale",
+									"value": "ja",
+									"description": "Allows API consumers to pull relevant information (if available) in the specified  ISO 639-1 2-Letter Language Code. If langauge information is not available, response will be returned in English.\n",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Gives the full details about a venue including location, tips, and categories.\n\nIf the venue ID given is one that has been merged into another “master” venue, the response will show data about the “master” instead of giving you an error.\n\n#### Response Model: [Venues/Response Fields](https://developer.foursquare.com/docs/api/venues/details)"
+					},
+					"response": []
+				},
+				{
+					"name": "Suggest Completion",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/{{VENUE_ID}}?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"{{VENUE_ID}}"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "locale",
+									"value": "ja",
+									"description": "Undocumented. Allows API consumers to pull relevant information (if available) in the specified  ISO 639-1 2-Letter Language Code. If langauge information is not available, response will be returned in English.\n",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Returns a list of mini-venues partially matching the search term, near the location."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Venue Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/categories?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"categories"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "locale",
+									"value": "es",
+									"description": "Undocumented. Allows API consumers to pull relevant information (if available) in the specified  ISO 639-1 2-Letter Language Code. If langauge information is not available, response will be returned in English. Supported locales can be found at https://developer.foursquare.com/docs/api/configuration/internationalization\n",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Returns a hierarchical list of categories applied to venues. This list is also available on our [categories](https://developer.foursquare.com/docs/resources/categories) page.\n\n#### Response Model: [Categories/Response Fields](https://developer.foursquare.com/docs/api/venues/categories)"
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			}
+		},
+		{
+			"name": "Venues",
+			"item": [
+				{
+					"name": "Get Details of a Venue",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/{{VENUE_ID}}?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"{{VENUE_ID}}"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "locale",
+									"value": "ja",
+									"description": "Allows API consumers to pull relevant information (if available) in the specified  ISO 639-1 2-Letter Language Code. If langauge information is not available, response will be returned in English.\n",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Gives the full details about a venue including location, tips, and categories.\n\nIf the venue ID given is one that has been merged into another “master” venue, the response will show data about the “master” instead of giving you an error.\n\n#### Response Model: [Venues/Response Fields](https://developer.foursquare.com/docs/api/venues/details)"
+					},
+					"response": []
+				},
+				{
+					"name": "Search for Venues (intent: checkin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6d02e36a-e088-4ebe-93b9-79c928cdc83a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/search?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&ll=40.7099,-73.9622&intent=checkin&radius=200&query=peter luger steakhouse",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"search"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "ll",
+									"value": "40.7099,-73.9622",
+									"description": "REQUIRED unless near is provided. Latitude and longitude of the user’s location."
+								},
+								{
+									"key": "near",
+									"value": "new york",
+									"description": "REQUIRED unless ll is provided. A string naming a place in the world. If the near string is not geocodable, returns a failed_geocode error. Otherwise, searches within the bounds of the geocode and adds a geocode object to the response.",
+									"disabled": true
+								},
+								{
+									"key": "intent",
+									"value": "checkin",
+									"description": "Finds venues that the current user (or, for userless requests, a typical user) is likely to checkin to at the provided ll, at the current moment in time."
+								},
+								{
+									"key": "radius",
+									"value": "200",
+									"description": "Limit results to venues within this many meters of the specified location. Defaults to a city-wide area. Valid for requests with intent=checkin and categoryId or query. The maximum supported radius is currently 100,000 meters."
+								},
+								{
+									"key": "query",
+									"value": "peter luger steakhouse",
+									"description": "A search term to be applied against venue names.\n"
+								},
+								{
+									"key": "limit",
+									"value": "20",
+									"description": "Number of results to return, up to 50.",
+									"disabled": true
+								},
+								{
+									"key": "categoryId",
+									"value": "4d954b0ea243a5684a65b473",
+									"description": "A comma separated list of categories to limit results to. If you specify categoryId. Specifying a radius may improve results. If specifying a top-level category, all sub-categories will also match the query.",
+									"disabled": true
+								},
+								{
+									"key": "alt",
+									"value": "0",
+									"description": "Altitude of the user’s location, in meters.",
+									"disabled": true
+								},
+								{
+									"key": "llAcc",
+									"value": "10000",
+									"description": "Accuracy of latitude and longitude, in meters.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Returns a list of venues near the current location, optionally matching a search term.\n\nTo ensure the best possible results, pay attention to the intent parameter below.\n\nNote that most of the fields returned inside a venue can be optional. The user may create a venue that has no address, city, or state (the venue is created instead at the lat/long specified). Your client should handle these conditions safely. For more robust venue information (photos/tips/etc.), please see our venue details endpoint.\n\n#### Response Model: [Venues/Response Fields](https://developer.foursquare.com/docs/api/venues/search)"
+					},
+					"response": []
+				},
+				{
+					"name": "Search for Venues (intent: browse)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "03022bac-b74f-4ab5-9c50-bfffd0fbf1d5",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var venue_id = jsonData.response.venues[0].id;",
+									"var app_user_id = \"foursquare_postman_eoNXisMI\"",
+									"var currentDate = new Date();",
+									"var dd = currentDate.getDate();",
+									"var mm = currentDate.getMonth()+1;",
+									"var yyyy = currentDate.getFullYear();",
+									"",
+									"var hash = CryptoJS.HmacSHA256(app_user_id + venue_id + yyyy + mm + dd, \"secret\")",
+									"var visitSignature = CryptoJS.enc.Base64.stringify(hash);",
+									"",
+									"postman.setEnvironmentVariable(\"VENUE_ID\", venue_id);",
+									"postman.setEnvironmentVariable(\"requestId_select\", jsonData.meta.requestId);",
+									"postman.setEnvironmentVariable(\"visitSignature_select\", visitSignature);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/search?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&near=new york&intent=browse&radius=10000&query=peter luger steak house&limit=10",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"search"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "ll",
+									"value": "40.7099,-73.9622",
+									"description": "REQUIRED unless near is provided. Latitude and longitude of the user’s location. ",
+									"disabled": true
+								},
+								{
+									"key": "near",
+									"value": "new york",
+									"description": "REQUIRED unless ll is provided. A string naming a place in the world. If the near string is not geocodable, returns a failed_geocode error. Otherwise, searches within the bounds of the geocode and adds a geocode object to the response."
+								},
+								{
+									"key": "intent",
+									"value": "browse",
+									"description": "Find venues within a given area. Browse searches an entire region instead of only finding venues closest to a point. A region to search can be defined by including either the ll and radius parameters, or the sw and ne. The region will be circular if you include the ll and radius parameters, or a bounding box if you include the sw and ne parameters."
+								},
+								{
+									"key": "radius",
+									"value": "10000",
+									"description": "Limit results to venues within this many meters of the specified location. Defaults to a city-wide area. Valid for requests with intent=browse. The maximum supported radius is currently 100,000 meters."
+								},
+								{
+									"key": "sw",
+									"value": "40.707770, -73.970390",
+									"description": "With ne, limits results to the bounding box defined by the latitude and longitude given by sw as its south-west corner, and ne as its north-east corner. Not valid with ll or radius. Bounding boxes with an area up to approximately 10,000 square kilometers are supported.",
+									"disabled": true
+								},
+								{
+									"key": "ne",
+									"value": "40.712388, -73.956614",
+									"description": "See sw",
+									"disabled": true
+								},
+								{
+									"key": "query",
+									"value": "peter luger steak house",
+									"description": "A search term to be applied against venue names."
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Number of results to return, up to 50.\n"
+								},
+								{
+									"key": "categoryId",
+									"value": "4d954b0ea243a5684a65b473",
+									"description": "A comma separated list of categories to limit results to. If you specify categoryId. Specifying a radius may improve results. If specifying a top-level category, all sub-categories will also match the query.",
+									"disabled": true
+								},
+								{
+									"key": "llAcc",
+									"value": "10000.0",
+									"description": "Accuracy of latitude and longitude, in meters.",
+									"disabled": true
+								},
+								{
+									"key": "alt",
+									"value": "0",
+									"description": "Altitude of the user’s location, in meters.",
+									"disabled": true
+								},
+								{
+									"key": "altAcc",
+									"value": "10000.0",
+									"description": "Accuracy of the user’s altitude, in meters.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Returns a list of venues near the current location, optionally matching a search term.\n\nTo ensure the best possible results, pay attention to the intent parameter below.\n\nNote that most of the fields returned inside a venue can be optional. The user may create a venue that has no address, city, or state (the venue is created instead at the lat/long specified). Your client should handle these conditions safely. For more robust venue information (photos/tips/etc.), please see our venue details endpoint.\n\n#### Response Model: [Venues/Response Fields](https://developer.foursquare.com/docs/api/venues/search)"
+					},
+					"response": []
+				},
+				{
+					"name": "Search for Venues (intent: global)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/search?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&intent=global&query=airport&limit=10",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"search"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "intent",
+									"value": "global",
+									"description": "Finds the most globally relevant venues for the search, independent of location. Ignores all parameters other than query and limit."
+								},
+								{
+									"key": "query",
+									"value": "airport",
+									"description": "A search term to be applied against venue names."
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Number of results to return, up to 50."
+								}
+							]
+						},
+						"description": "Returns a list of venues near the current location, optionally matching a search term.\n\nTo ensure the best possible results, pay attention to the intent parameter below.\n\nNote that most of the fields returned inside a venue can be optional. The user may create a venue that has no address, city, or state (the venue is created instead at the lat/long specified). Your client should handle these conditions safely. For more robust venue information (photos/tips/etc.), please see our venue details endpoint.\n\n#### Response Model: [Venues/Response Fields](https://developer.foursquare.com/docs/api/venues/search)"
+					},
+					"response": []
+				},
+				{
+					"name": "Search for Venues (intent: match)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/search?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&ll=40.7099,-73.9622&name=peter luger steakhouse&intent=match",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"search"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "ll",
+									"value": "40.7099,-73.9622",
+									"description": "REQUIRED. Latitude and longitude of the user’s location"
+								},
+								{
+									"key": "name",
+									"value": "peter luger steakhouse"
+								},
+								{
+									"key": "intent",
+									"value": "match",
+									"description": "Finds a venue that is the near-exact match for the given parameters. This intent is primarily used when trying to harmonize an existing place database with Foursquare’s and is highly sensitive to the provided location. The result will take into account distance and spelling variations. name and ll are the only required parameters for this intent, but we also suggest sending phone, address, city, state, zip, and twitter for better results. There’s no specified format for these parameters—we do our best to normalize them and drop them from the search if unsuccessful."
+								},
+								{
+									"key": "phone",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "address",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "city",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "state",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "zip",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "twitter",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Returns a list of venues near the current location, optionally matching a search term.\n\nTo ensure the best possible results, pay attention to the intent parameter below.\n\nNote that most of the fields returned inside a venue can be optional. The user may create a venue that has no address, city, or state (the venue is created instead at the lat/long specified). Your client should handle these conditions safely. For more robust venue information (photos/tips/etc.), please see our venue details endpoint.\n\n#### Response Model: [Venues/Response Fields](https://developer.foursquare.com/docs/api/venues/search)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Venue Recommendations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/explore?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&ll=1.283644,103.860753&query=steak&limit=10&offset=5&price=2,3",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"explore"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "ll",
+									"value": "1.283644,103.860753",
+									"description": "REQUIRED unless near is provided. Latitude and longitude of the user’s location."
+								},
+								{
+									"key": "near",
+									"value": "marina bay singapore",
+									"description": "REQUIRED unless ll is provided. A string naming a place in the world. If the near string is not geocodable, returns a failed_geocode error. Otherwise, searches within the bounds of the geocode and adds a geocode object to the response.",
+									"disabled": true
+								},
+								{
+									"key": "llAcc",
+									"value": "10000.0",
+									"description": "Accuracy of latitude and longitude, in meters.",
+									"disabled": true
+								},
+								{
+									"key": "alt",
+									"value": "0",
+									"description": "Altitude of the user’s location, in meters.",
+									"disabled": true
+								},
+								{
+									"key": "altAcc",
+									"value": "10000.0",
+									"description": "Accuracy of the user’s altitude, in meters.",
+									"disabled": true
+								},
+								{
+									"key": "radius",
+									"value": "250",
+									"description": "Radius to search within, in meters. If radius is not specified, a suggested radius will be used based on the density of venues in the area. The maximum supported radius is currently 100,000 meters.",
+									"disabled": true
+								},
+								{
+									"key": "section",
+									"value": "food",
+									"description": "One of food, drinks, coffee, shops, arts, outdoors, sights, trending, nextVenues (venues frequently visited after a given venue), or topPicks (a mix of recommendations generated without a query from the user). Choosing one of these limits results to venues with the specified category or property.",
+									"disabled": true
+								},
+								{
+									"key": "query",
+									"value": "steak",
+									"description": "A term to be searched against a venue’s tips, category, etc. The query parameter has no effect when a section is specified."
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Number of results to return, up to 50.\n"
+								},
+								{
+									"key": "offset",
+									"value": "5",
+									"description": "Used to page through results, up to 50."
+								},
+								{
+									"key": "novelty",
+									"value": null,
+									"description": "Use only if you have user's Foursquare OAUTH token. \nPass new or old to limit results to places the acting user hasn’t been or has been, respectively. Omitting this parameter returns a mixture of old and new venues.",
+									"disabled": true
+								},
+								{
+									"key": "friendVisits",
+									"value": null,
+									"description": "Use only if you have user's Foursquare OAUTH token. \nPass visited or notvisited to limit results to places the acting user’s friends have or haven’t been, respectively. Omitting this parameter returns a mixture of venues to which the user’s friends have or haven’t been.",
+									"disabled": true
+								},
+								{
+									"key": "time",
+									"value": "any",
+									"description": "Pass any to retrieve results for any time of day. Omitting this parameter returns results targeted to the current time of day.",
+									"disabled": true
+								},
+								{
+									"key": "day",
+									"value": "any",
+									"description": "Pass any to retrieve results for any day of the week. Omitting this parameter returns results targeted to the current day of the week.",
+									"disabled": true
+								},
+								{
+									"key": "lastVenue",
+									"value": null,
+									"description": "Use only if you have user's Foursquare OAUTH token. \nA venue ID to use in combination with the intent=nextVenues parameter, which returns venues users often visit after a given venue. If intent=nextVenues is specified but lastVenue is not, the user’s last check-in will be used if it is within 2 hours. If the user has not checked in within the last 2 hours, no results will be returned.",
+									"disabled": true
+								},
+								{
+									"key": "intent",
+									"value": "nextVenue",
+									"description": "Use only if you have user's Foursquare OAUTH token. \nUsed alongside the lastVenue parameter, and will tell you venues that the Foursquare user will often visit after the given lastVenue.",
+									"disabled": true
+								},
+								{
+									"key": "openNow",
+									"value": "1",
+									"description": "Boolean flag to only include venues that are open now. This prefers official provider hours but falls back to popular check-in hours.",
+									"disabled": true
+								},
+								{
+									"key": "sortByDistance",
+									"value": "1",
+									"description": "Boolean flag to sort the results by distance instead of relevance.",
+									"disabled": true
+								},
+								{
+									"key": "price",
+									"value": "2,3",
+									"description": "Comma separated list of price points. Currently the valid range of price points are [1,2,3,4], 1 being the least expensive, 4 being the most expensive. For food venues, in the United States, 1 is < $10 an entree, 2 is $10-$20 an entree, 3 is $20-$30 an entree, 4 is > $30 an entree."
+								},
+								{
+									"key": "saved",
+									"value": "1",
+									"description": "Use only if you have user's Foursquare OAUTH token. \nBoolean flag to only include venues that the user has saved on their To-Do list or to another list.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Recommended only if you require the user to log into their Foursquare accounts for personalised recommendations. If not, consider \"Search for Venues (intent: browse)\" for a list of recommendations.\n\nReturns a list of recommended venues near the current location. For more robust information about the venues themselves (photos/tips/etc.), please see our venue details endpoint.\n\nIf authenticated, the method will personalize the ranking based on you and your friends.\n\n#### Response Model: [Venues/Response Fields](https://developer.foursquare.com/docs/api/venues/explore)"
+					},
+					"response": []
+				},
+				{
+					"name": "Report Venue Selection",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/{{VENUE_ID}}/select?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&requestId={{requestId_select}}&type=currentLocation&visitSignature={{visitSignature_select}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"{{VENUE_ID}}",
+								"select"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "requestId",
+									"value": "{{requestId_select}}",
+									"description": "REQUIRED. The request ID returned in the search response leading to the venue selection."
+								},
+								{
+									"key": "type",
+									"value": "currentLocation",
+									"description": "REQUIRED. The type of selection the user has made. One of currentLocation, destination, or save."
+								},
+								{
+									"key": "visitSignature",
+									"value": "{{visitSignature_select}}",
+									"description": "REQUIRED. The HMAC hex digest of the message \"APP_USER_ID, VENUE_ID, CURRENT_YYYYMMDD\". This allows us to distinguish between three selections at a venue by a single user vs. by three distinct users while preserving user privacy."
+								}
+							]
+						},
+						"description": "Report the selection of a venue as the result of a search, explore, or suggestcompletion request.\n\nVenue selections or ‘pingbacks’ are used exclusively as inputs for training our underlying venue search model; this helps us improve accuracy at the places you and your users care about. \n\nNo personally identifiable information is collected at any point.\n\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Venue's Photos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6867f04d-dc8c-4c70-bc59-c9b5f2878151",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"prefix_photo\", jsonData.response.photos.items[0].prefix);",
+									"postman.setEnvironmentVariable(\"suffix_photo\", jsonData.response.photos.items[0].suffix);",
+									"postman.setEnvironmentVariable(\"PHOTO_ID\", jsonData.response.photos.items[0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/{{VENUE_ID}}/photos?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&group=venue&limit=10",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"{{VENUE_ID}}",
+								"photos"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "group",
+									"value": "venue"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Returns photos for a specific venue. To assemble a photo URL, combine the response’s prefix + size + suffix. Ex: https://igx.4sqi.net/img/general/300x500/5163668_xXFcZo7sU8aa1ZMhiQ2kIP7NllD48m7qsSwr1mJnFj4.jpg\n\nsize can be one of the following, where XX or YY is one of 36, 100, 300, or 500.\n\nXXxYY\noriginal: the original photo’s size\ncapXX: cap the photo with a width or height of XX. (whichever is larger). Scales the other, smaller dimension proportionally\nwidthXX: forces the width to be XX and scales the height proportionally\nheightYY: forces the height to be YY and scales the width proportionally\n\n#### Response Model: [Photos/Response Fields](https://developer.foursquare.com/docs/api/venues/photos)"
+					},
+					"response": []
+				},
+				{
+					"name": "Show Venue Photo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{prefix_photo}}500x500{{suffix_photo}}",
+							"host": [
+								"{{prefix_photo}}500x500{{suffix_photo}}"
+							]
+						},
+						"description": "To assemble a photo URL, combine the response’s prefix + size + suffix. \nEx: https://igx.4sqi.net/img/general/300x500/5163668_xXFcZo7sU8aa1ZMhiQ2kIP7NllD48m7qsSwr1mJnFj4.jpg\n\nsize can be one of the following, where XX or YY is one of 36, 100, 300, or 500.\n\nXXxYY\noriginal: the original photo’s size\ncapXX: cap the photo with a width or height of XX. (whichever is larger). Scales the other, smaller dimension proportionally\nwidthXX: forces the width to be XX and scales the height proportionally\nheightYY: forces the height to be YY and scales the width proportionally"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Venue's Tips",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2f3149bf-6f04-431f-b494-12147b77d3b2",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"TIP_ID\",jsonData.response.tips.items[0].id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/{{VENUE_ID}}/tips?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&sort=popular&limit=10",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"{{VENUE_ID}}",
+								"tips"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "sort",
+									"value": "popular",
+									"description": "One of friends, recent, or popular."
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Number of results to return, up to 500."
+								},
+								{
+									"key": "offset",
+									"value": "",
+									"description": "Used to page through results.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Returns tips for a venue.\n#### Response Model: [Tips/Response Fields](https://developer.foursquare.com/docs/api/venues/tips)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Venue's Hours",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/{{VENUE_ID}}/hours?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"{{VENUE_ID}}",
+								"hours"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								}
+							]
+						},
+						"description": "Returns hours for a venue.\n#### Response Model: [Hours/Response Fields](https://developer.foursquare.com/docs/api/venues/hours)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Venue's Menu",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/{{VENUE_ID}}/menu?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"{{VENUE_ID}}",
+								"menu"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								}
+							]
+						},
+						"description": "Returns menu information for a venue.\n#### Response Model: [Menu/Response Fields](https://developer.foursquare.com/docs/api/venues/menu)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a Venue's Links",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/{{VENUE_ID}}/links?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"{{VENUE_ID}}",
+								"links"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								}
+							]
+						},
+						"description": "Returns URLs or identifiers from third parties that have been applied to this venue.\n\nUsed in conjunction with the \"Search for Venues\" endpoint to obtain relevant sources of information."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Trending Venues",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/trending?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&ll=40.7099,-73.9622&limit=10&radius=10000",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"trending"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "ll",
+									"value": "40.7099,-73.9622",
+									"description": "REQUIRED unless near is provided. Latitude and longitude of the desired location."
+								},
+								{
+									"key": "near",
+									"value": "Brooklyn New York",
+									"description": "REQUIRED unless ll is provided. A string naming a place in the world. If the near string is not geocodable, returns a failed_geocode error. Otherwise, searches within the bounds of the geocode and adds a geocode object to the response.",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"description": "Number of results to return, up to 50."
+								},
+								{
+									"key": "radius",
+									"value": "10000",
+									"description": "Radius in meters, up to approximately 2000 meters."
+								}
+							]
+						},
+						"description": "Returns a list of venues near the current location with the most people currently checked in. \n\nResults returned are trending venues based on real-local-time.\n\nFor more robust information about the venues themselves (photos/tips/etc.), please see our venue details endpoint.\n\n#### Response Model: [Trending Venues/Response Fields](https://developer.foursquare.com/docs/api/venues/trending)"
+					},
+					"response": []
+				},
+				{
+					"name": "Suggest Completion",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/{{VENUE_ID}}?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"{{VENUE_ID}}"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "locale",
+									"value": "ja",
+									"description": "Undocumented. Allows API consumers to pull relevant information (if available) in the specified  ISO 639-1 2-Letter Language Code. If langauge information is not available, response will be returned in English.\n",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Returns a list of mini-venues partially matching the search term, near the location."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users Who Liked a Venue",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/{{VENUE_ID}}/likes?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"{{VENUE_ID}}",
+								"likes"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "oauth_token",
+									"value": "{{oauth_token}}",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Returns friends and a total count of users who have liked this venue.\n\nCount for friends will only be applicable when you provide a Foursquare user's OAUTH2 token."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Venue Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/categories?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"categories"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "locale",
+									"value": "es",
+									"description": "Undocumented. Allows API consumers to pull relevant information (if available) in the specified  ISO 639-1 2-Letter Language Code. If langauge information is not available, response will be returned in English. Supported locales can be found at https://developer.foursquare.com/docs/api/configuration/internationalization\n",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Returns a hierarchical list of categories applied to venues. This list is also available on our [categories](https://developer.foursquare.com/docs/resources/categories) page.\n\n#### Response Model: [Categories/Response Fields](https://developer.foursquare.com/docs/api/venues/categories)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Similar Venues",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/{{VENUE_ID}}/similar?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"{{VENUE_ID}}",
+								"similar"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								}
+							]
+						},
+						"description": "Returns a list of venues similar and near to the specified venue. For more robust information about the venues themselves (photos/tips/etc.), please see our venue details endpoint."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Next Venues",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/{{VENUE_ID}}/nextvenues?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"{{VENUE_ID}}",
+								"nextvenues"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								}
+							]
+						},
+						"description": "Returns venues that people often check in to after the current venue. Up to 5 venues are returned in each query, and results are sorted by how many people have visited that venue after the current one. For more robust information about the venues themselves (photos/tips/etc.), please see our venue details endpoint.\n\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Like a Venue",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "queryParams",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "ZL30SB3KN1N25SRTRPYHIT222UEQGZCPOFE5GC2IHVX1M444",
+									"type": "string"
+								},
+								{
+									"key": "tokenType",
+									"type": "any"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/{{VENUE_ID}}/like?oauth_token={{oauth_token}}&client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&set=1",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"{{VENUE_ID}}",
+								"like"
+							],
+							"query": [
+								{
+									"key": "oauth_token",
+									"value": "{{oauth_token}}"
+								},
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "set",
+									"value": "1",
+									"description": "If 1, like this venue. If 0 unlike (un-do a previous like) it. Default value is 1."
+								}
+							]
+						},
+						"description": "Allows the acting user to like or unlike a venue."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Photos",
+			"item": [
+				{
+					"name": "Get Details of a Photo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/photos/{{PHOTO_ID}}?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"photos",
+								"{{PHOTO_ID}}"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								}
+							]
+						},
+						"description": "Get details of a photo.\n\nTo assemble a photo URL, combine the response’sprefix + size + suffix. Ex: https://igx.4sqi.net/img/general/300x500/5163668_xXFcZo7sU8aa1ZMhiQ2kIP7NllD48m7qsSwr1mJnFj4.jpg\n\nsize can be one of the following, where XX or YY is one of 36, 100, 300, or 500.\n\nXXxYY\noriginal: the original photo’s size\ncapXX: cap the photo with a width or height of XX. (whichever is larger). Scales the other, smaller dimension proportionally\nwidthXX: forces the width to be XX and scales the height proportionally\nheightYY: forces the height to be YY and scales the width proportionally\n\n#### Response Model: [Photo Details/Response Fields](https://developer.foursquare.com/docs/api/photos/details)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tips",
+			"item": [
+				{
+					"name": "Get Details of a Tip",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/tips/{{TIP_ID}}?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"tips",
+								"{{TIP_ID}}"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								}
+							]
+						},
+						"description": "Gives details about a tip, including which users (especially friends) have marked the tip to-do."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Lists",
+			"item": [
+				{
+					"name": "Create a List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "90eecffe-25ca-4762-b49f-fc6e920d1816",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"LIST_ID\", jsonData.response.list.id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/lists/add?oauth_token={{oauth_token}}&client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&name=Test Venues&description=List of Test Venues You Have Created&collaborative=true",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"lists",
+								"add"
+							],
+							"query": [
+								{
+									"key": "oauth_token",
+									"value": "{{oauth_token}}"
+								},
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "name",
+									"value": "Test Venues",
+									"description": "The name of the list."
+								},
+								{
+									"key": "description",
+									"value": "List of Test Venues You Have Created",
+									"description": "The description of the list."
+								},
+								{
+									"key": "collaborative",
+									"value": "true",
+									"description": "Boolean indicating if this list can be edited by friends."
+								},
+								{
+									"key": "photoId",
+									"value": "",
+									"description": "The id of a photo that should be set as the list photo.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Allows user to create a new list."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Venue Edits (Exercise Caution)",
+			"item": [
+				{
+					"name": "Add a Venue",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "02ec6536-cd43-41aa-9a63-42aa6a1d1f76",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"var list_id = pm.environment.get(\"LIST_ID\");",
+									"var oauth_token = pm.environment.get(\"oauth_token\");",
+									"var version = pm.environment.get(\"v\");",
+									"var client_id = pm.environment.get(\"client_id\");",
+									"var client_secret = pm.environment.get(\"client_secret\");",
+									"var url = \"https://api.foursquare.com/v2/lists/\" + list_id + \"/additem?v=\" + version + ",
+									"    \"&client_id=\" + client_id + ",
+									"    \"&client_secret=\" + client_secret + ",
+									"    \"&oauth_token=\" + oauth_token +",
+									"    \"&venueId=\" + jsonData.response.venue.id;",
+									"",
+									"var settings = {",
+									"  \"url\": url,",
+									"  \"method\": \"POST\"",
+									"}",
+									"",
+									"pm.sendRequest(settings, function(err, res){",
+									"    console.log(err ? err : res.json());",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/add?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&name=Foursquare Asia Test Venue&ll=1.2787325314969156,103.8434731966384&primaryCategoryId=4bf58dd8d48988d124941735&oauth_token={{oauth_token}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"add"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "name",
+									"value": "Foursquare Asia Test Venue",
+									"description": "REQUIRED. The name of the venue."
+								},
+								{
+									"key": "ll",
+									"value": "1.2787325314969156,103.8434731966384",
+									"description": "REQUIRED. Latitude and longitude of the venue, as accurate as is known."
+								},
+								{
+									"key": "primaryCategoryId",
+									"value": "4bf58dd8d48988d124941735",
+									"description": "REQUIRED. The ID of the category to which you want to assign this venue."
+								},
+								{
+									"key": "oauth_token",
+									"value": "{{oauth_token}}",
+									"description": "Token obtained after you use a Foursquare account to login and obtain an OAUTH token. You may do so from the Authorization tab above, through Postman. You have to set the appropriate Callback URI from your Foursquare Developer console to include \"https://www.getpostman.com/oauth2/callback\"."
+								},
+								{
+									"key": "address",
+									"value": "",
+									"description": "The address of the venue.",
+									"disabled": true
+								},
+								{
+									"key": "crossStreet",
+									"value": "",
+									"description": "The nearest intersecting street or streets.",
+									"disabled": true
+								},
+								{
+									"key": "city",
+									"value": "",
+									"description": "The city name where this venue is.",
+									"disabled": true
+								},
+								{
+									"key": "state",
+									"value": "",
+									"description": "The nearest state or province to the venue.",
+									"disabled": true
+								},
+								{
+									"key": "zip",
+									"value": "",
+									"description": "The zip or postal code for the venue.",
+									"disabled": true
+								},
+								{
+									"key": "phone",
+									"value": "",
+									"description": "The phone number of the venue.",
+									"disabled": true
+								},
+								{
+									"key": "allCategoryIds",
+									"value": "",
+									"description": "Additional category IDs for the venue (up to two more, separated by a comma).",
+									"disabled": true
+								},
+								{
+									"key": "parentId",
+									"value": "",
+									"description": "If the venue is a subvenue of a larger venue (such as a coffee shop within a Target), set this attribute to the ID of the parent venue.",
+									"disabled": true
+								},
+								{
+									"key": "cc",
+									"value": "",
+									"description": "The country code of the venue. This is optional but we recommend sending this parameter if your venue borders another country and you are getting formatting errors for the zip and/or phone.",
+									"disabled": true
+								},
+								{
+									"key": "twitter",
+									"value": "",
+									"description": "The twitter handle of the venue.",
+									"disabled": true
+								},
+								{
+									"key": "description",
+									"value": "",
+									"description": "A freeform description of the venue, up to 160 characters.",
+									"disabled": true
+								},
+								{
+									"key": "chainIds",
+									"value": "",
+									"description": "A comma-delimited string of chain ID(s) for the venue (each venue can have up to five chain IDs, if applicable).",
+									"disabled": true
+								},
+								{
+									"key": "url",
+									"value": "",
+									"description": "The url of the homepage of the venue.",
+									"disabled": true
+								},
+								{
+									"key": "ignoreDuplicates",
+									"value": "",
+									"description": "A boolean flag telling the server to ignore duplicates and force the addition of this venue.",
+									"disabled": true
+								},
+								{
+									"key": "ignoreDuplicatesKey",
+									"value": "",
+									"description": "Required if ignoreDuplicates is true. This key will be available in the response of the HTTP 409 error of the first (failed) attempt to add venue.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Allows Foursquare users to add a new venue. All fields are optional, except for ll, name, and primaryCategoryId.\n\nBefore adding a place, please make sure your data is properly formatted to adhere to our style guide [here](https://support.foursquare.com/hc/en-us/articles/201064960-What-is-the-style-guide-for-adding-and-editing-places-).\n\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Indicate a Venue is Incorrect",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/{{EDIT_VENUE_ID}}/flag?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&oauth_token={{oauth_token}}&problem=mislocated",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"{{EDIT_VENUE_ID}}",
+								"flag"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "oauth_token",
+									"value": "{{oauth_token}}",
+									"description": "Token obtained after you use a Foursquare account to login and obtain an OAUTH token. You may do so from the Authorization tab above, through Postman. You have to set the appropriate Callback URI from your Foursquare Developer console to include \"https://www.getpostman.com/oauth2/callback\"."
+								},
+								{
+									"key": "problem",
+									"value": "mislocated",
+									"description": "REQUIRED. One of mislocated, closed, duplicate, inappropriate, doesnt_exist, private, or event_over."
+								},
+								{
+									"key": "venueid",
+									"value": "",
+									"description": "ID of the duplicated venue (for problem duplicate).",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Allows users to indicate a venue is incorrect in some way.\n\nFlags are pushed into a moderation queue. If a closed flag is approved, the venue will no longer show up in search results. Moderators will attempt to correct cases of mislocated or duplicate venues as appropriate. If the user has the correct address for a mislocated venue, use proposeedit instead.\n\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Propose an Edit to a Venue",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://api.foursquare.com/v2/venues/{{EDIT_VENUE_ID}}/proposeedit?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&oauth_token={{oauth_token}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"foursquare",
+								"com"
+							],
+							"path": [
+								"v2",
+								"venues",
+								"{{EDIT_VENUE_ID}}",
+								"proposeedit"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{client_secret}}"
+								},
+								{
+									"key": "v",
+									"value": "{{v}}"
+								},
+								{
+									"key": "oauth_token",
+									"value": "{{oauth_token}}",
+									"description": "Token obtained after you use a Foursquare account to login and obtain an OAUTH token. You may do so from the Authorization tab above, through Postman. You have to set the appropriate Callback URI from your Foursquare Developer console to include \"https://www.getpostman.com/oauth2/callback\"."
+								},
+								{
+									"key": "name",
+									"value": "",
+									"description": "The name of the venue.\n",
+									"disabled": true
+								},
+								{
+									"key": "address",
+									"value": "",
+									"description": "The address of the venue.\n",
+									"disabled": true
+								},
+								{
+									"key": "crossStreet",
+									"value": "",
+									"description": "The nearest intersecting street or streets.\n",
+									"disabled": true
+								},
+								{
+									"key": "city",
+									"value": "",
+									"description": "The city name where this venue is.",
+									"disabled": true
+								},
+								{
+									"key": "state",
+									"value": "",
+									"description": "The nearest state or province to the venue.",
+									"disabled": true
+								},
+								{
+									"key": "zip",
+									"value": "",
+									"description": "The zip or postal code for the venue.\n",
+									"disabled": true
+								},
+								{
+									"key": "phone",
+									"value": "",
+									"description": "The phone number of the venue.\n",
+									"disabled": true
+								},
+								{
+									"key": "twitter",
+									"value": "",
+									"description": "The twitter handle of the venue.\n",
+									"disabled": true
+								},
+								{
+									"key": "description",
+									"value": "",
+									"description": "A freeform description of the venue, up to 300 characters.\n",
+									"disabled": true
+								},
+								{
+									"key": "url",
+									"value": "",
+									"description": "The url of the homepage of the venue.\n",
+									"disabled": true
+								},
+								{
+									"key": "menuUrl",
+									"value": "",
+									"description": "A url where the menu of the venue can be found.\n",
+									"disabled": true
+								},
+								{
+									"key": "facebookUrl",
+									"value": "",
+									"description": "The url for this venue’s Facebook Page.\n",
+									"disabled": true
+								},
+								{
+									"key": "venuell",
+									"value": "",
+									"description": "Latitude and longitude at which the venue should be located.\n",
+									"disabled": true
+								},
+								{
+									"key": "primaryCategoryId",
+									"value": "",
+									"description": "The ID of the category to which you want to assign this venue.\n",
+									"disabled": true
+								},
+								{
+									"key": "addCategoryIds",
+									"value": "",
+									"description": "Comma-separated list of new category IDs to be assigned to this venue. If you are adding a new category to a venue and you want to make it primary, you should just use primaryCategoryId.",
+									"disabled": true
+								},
+								{
+									"key": "removeCategoryIds",
+									"value": "",
+									"description": "Comma-separated list of new category IDs to be removed from this venue.\n",
+									"disabled": true
+								},
+								{
+									"key": "hours",
+									"value": "",
+									"description": "The hours for the venue, as a semi-colon separated list of open segments and named segments (e.g., brunch or happy hour). Open segments are formatted as day,start,end. Named segments additionally have a label, formatted as day,start,end,label. Days are formatted as integers with Monday = 1,…,Sunday = 7. Start and End are formatted as [+]HHMM format. Use 24 hour format (no colon), prefix with 0 for HH or MM less than 10. Use ‘+’ prefix, i.e., +0230 to represent 2:30 am past midnight into the following day. To indicate that a venue is open 24/7, send this value with the hours attribute: 1,0000,2400;2,0000,2400;3,0000,2400;4,0000,2400;5,0000,2400;6,0000,2400;7,0000,2400",
+									"disabled": true
+								},
+								{
+									"key": "creditCards",
+									"value": "no",
+									"description": "Undocumented. Send yes or no to indicate if this place accepts credit cards.",
+									"disabled": true
+								},
+								{
+									"key": "americanExpress",
+									"value": "no",
+									"description": "Undocumented. Send yes or no to indicate if this place accepts AMEX cards.",
+									"disabled": true
+								},
+								{
+									"key": "visa",
+									"value": "no",
+									"description": "Undocumented. Send yes or no to indicate if this place accepts Visa.",
+									"disabled": true
+								},
+								{
+									"key": "mastercard",
+									"value": "no",
+									"description": "Undocumented. Send yes or no to indicate if this place accepts Mastercard.",
+									"disabled": true
+								},
+								{
+									"key": "name:zh",
+									"value": "四方辦公室",
+									"description": "Undocumented. Send the translated venue name for the venue in the language specified with the ISO 639-1 2-Letter Language Code.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Allows you to propose a change to a venue. Before editing, please make sure your fields are properly formatted to adhere to our style guide [here](https://support.foursquare.com/hc/en-us/articles/201064960-What-is-the-style-guide-for-adding-and-editing-places-).\n\nUsers with improper edits may see their edits “rolled back” or in some cases face a temporary ban on their account from our Super User community."
+					},
+					"response": []
+				}
+			],
+			"description": "These endpoints make suggested changes directly to data that is publicly accessible to our data consumers. Test and use these endpoints with caution, and avoid editing data for popular venues or venues that you are unfamiliar with.\n\nIf found or reported, misuse of these endpoints will lead to immediate account restrictions and permanent account bans from future edits.",
+			"auth": {
+				"type": "oauth2",
+				"oauth2": [
+					{
+						"key": "addTokenTo",
+						"value": "queryParams",
+						"type": "string"
+					},
+					{
+						"key": "accessToken",
+						"value": "ZL30SB3KN1N25SRTRPYHIT222UEQGZCPOFE5GC2IHVX1M444",
+						"type": "string"
+					},
+					{
+						"key": "tokenType",
+						"type": "any"
+					}
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,74 @@
+{
+	"id": "29b1d397-7fb8-43f5-b233-bea8c3cca203",
+	"name": "Foursquare Places API",
+	"values": [
+		{
+			"key": "client_id",
+			"value": "FSQ_CLIENT_ID",
+			"enabled": true
+		},
+		{
+			"key": "client_secret",
+			"value": "FSQ_CLIENT_SECRET",
+			"enabled": true
+		},
+		{
+			"key": "v",
+			"value": "20190425",
+			"enabled": true
+		},
+		{
+			"key": "VENUE_ID",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "requestId_select",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "visitSignature_select",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "prefix_photo",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "suffix_photo",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "oauth_token",
+			"value": "OAUTH_TOKEN",
+			"enabled": true
+		},
+		{
+			"key": "EDIT_VENUE_ID",
+			"value": "EDIT_VENUE_ID",
+			"enabled": true
+		},
+		{
+			"key": "PHOTO_ID",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "TIP_ID",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "LIST_ID",
+			"value": "",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2019-04-30T02:17:39.606Z",
+	"_postman_exported_using": "Postman/7.0.9"
+}
