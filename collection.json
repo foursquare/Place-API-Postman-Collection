@@ -1386,7 +1386,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://api.foursquare.com/v2/venues/{{VENUE_ID}}?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}",
+							"raw": "https://api.foursquare.com/v2/venues/suggestcompletion?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&ll=40.7099,-73.9622&query=foursqu",
 							"protocol": "https",
 							"host": [
 								"api",
@@ -1396,7 +1396,7 @@
 							"path": [
 								"v2",
 								"venues",
-								"{{VENUE_ID}}"
+								"suggestcompletion"
 							],
 							"query": [
 								{
@@ -1410,6 +1410,22 @@
 								{
 									"key": "v",
 									"value": "{{v}}"
+								},
+								{
+									"key": "ll",
+									"value": "40.7099,-73.9622",
+									"description": "REQUIRED unless near is provided. Latitude and longitude of the user’s location."
+								},
+								{
+									"key": "near",
+									"value": "new york",
+									"description": "REQUIRED unless ll is provided. A string naming a place in the world. If the near string is not geocodable, returns a failed_geocode error. Otherwise, searches within the bounds of the geocode and adds a geocode object to the response.",
+									"disabled": true
+								},
+								{
+									"key": "query",
+									"value": "foursqu",
+									"description": "REQUIRED A search term to be applied against titles. Must be at least 3 characters long."
 								},
 								{
 									"key": "locale",
