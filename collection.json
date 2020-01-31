@@ -1386,7 +1386,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://api.foursquare.com/v2/venues/suggestcompletion",
+							"raw": "https://api.foursquare.com/v2/venues/suggestcompletion?client_id={{client_id}}&client_secret={{client_secret}}&v={{v}}&ll=40.7099,-73.9622&query=foursqu",
 							"protocol": "https",
 							"host": [
 								"api",
