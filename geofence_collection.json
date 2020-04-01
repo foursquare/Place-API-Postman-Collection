@@ -1,0 +1,474 @@
+{
+	"info": {
+		"_postman_id": "182285c5-4503-4d21-98f0-be27d4323503",
+		"name": "Foursquare Geofences API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add a Venue Geofence",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "addTokenTo",
+							"value": "queryParams",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.foursquare.com/v2/apps/{{client_id}}/geofences/add?v={{v}}&oauth_token={{oauth_token}}&name=MyGeofence&radius=100&venueId=44e9b421f964a520a5371fe3",
+					"protocol": "https",
+					"host": [
+						"api",
+						"foursquare",
+						"com"
+					],
+					"path": [
+						"v2",
+						"apps",
+						"{{client_id}}",
+						"geofences",
+						"add"
+					],
+					"query": [
+						{
+							"key": "v",
+							"value": "{{v}}"
+						},
+						{
+							"key": "oauth_token",
+							"value": "{{oauth_token}}",
+							"description": "REQUIRED - A valid OAuth Token"
+						},
+						{
+							"key": "name",
+							"value": "MyGeofence",
+							"description": "REQUIRED A custom string that you can set to help you identify the set of geofences."
+						},
+						{
+							"key": "radius",
+							"value": "100",
+							"description": "Area around a venue that will trigger a geofence event. Default and minimum radius is 50 meters with a max of 5000."
+						},
+						{
+							"key": "venueId",
+							"value": "44e9b421f964a520a5371fe3",
+							"description": "A single Foursquare venueId."
+						},
+						{
+							"key": "categoryId",
+							"value": "4d4b7104d754a06370d81259",
+							"description": "A single Foursquare category.",
+							"disabled": true
+						},
+						{
+							"key": "chainId",
+							"value": "556ce426aceaff43eb04e8a0",
+							"description": "A single Foursquare chain.",
+							"disabled": true
+						},
+						{
+							"key": "dwellTime",
+							"value": "5",
+							"description": "Number of minutes user needs to be inside of a geofence to trigger a dwell event. Default is 1 minute.",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Create a geofence around any venue on Foursquare. This can be submitted for a specific Foursquare venueId, categoryId, or chainId. Although venueIds, categoryIds, and chainIds are all optional, at least one must be used to create a venue geofence."
+			},
+			"response": []
+		},
+		{
+			"name": "Add a Polygon Geofence",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.foursquare.com/v2/apps/{{client_id}}/geofences/add?v={{v}}&oauth_token={{oauth_token}}&name=MyGeofence!&polygon=40.74230057739135%2C-73.99121961065113%3B40.744966747904215%2C-73.9892025894718%3B40.74451155562636%2C-73.981520742853%3B40.74067481121037%2C-73.98182115026243%3B40.73742315963841%2C-73.98615560003054%3B40.73817105357466%2C-73.99353703923991%3B40.74233309230931%2C-73.99559697576301%3B40.74230057739135%2C-73.99121961065113&dwellTime=5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"foursquare",
+						"com"
+					],
+					"path": [
+						"v2",
+						"apps",
+						"{{client_id}}",
+						"geofences",
+						"add"
+					],
+					"query": [
+						{
+							"key": "v",
+							"value": "{{v}}"
+						},
+						{
+							"key": "oauth_token",
+							"value": "{{oauth_token}}"
+						},
+						{
+							"key": "name",
+							"value": "MyGeofence!",
+							"description": "REQUIRED A custom string that you can set to help you identify the set of geofences."
+						},
+						{
+							"key": "polygon",
+							"value": "40.74230057739135%2C-73.99121961065113%3B40.744966747904215%2C-73.9892025894718%3B40.74451155562636%2C-73.981520742853%3B40.74067481121037%2C-73.98182115026243%3B40.73742315963841%2C-73.98615560003054%3B40.73817105357466%2C-73.99353703923991%3B40.74233309230931%2C-73.99559697576301%3B40.74230057739135%2C-73.99121961065113",
+							"description": "REQUIRED A string of URL encoded lat/lng points separated by semicolon, with start and end as the same points. Must provide between 4 and 15 points in a clockwise fashion to successfully create the polygon."
+						},
+						{
+							"key": "dwellTime",
+							"value": "5",
+							"description": "Number of minutes user needs to be inside of a geofence to trigger a dwell event. Default is 1 minute."
+						}
+					]
+				},
+				"description": "Create a custom Polygon geofence of up to 15 different points."
+			},
+			"response": []
+		},
+		{
+			"name": "Add a Point Geofence",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.foursquare.com/v2/apps/{{client_id}}/geofences/add?v={{v}}&oauth_token={{oauth_token}}&name=MyGeofence&center=40.7435179,-73.988242149&radius=100&dwellTime=5",
+					"protocol": "https",
+					"host": [
+						"api",
+						"foursquare",
+						"com"
+					],
+					"path": [
+						"v2",
+						"apps",
+						"{{client_id}}",
+						"geofences",
+						"add"
+					],
+					"query": [
+						{
+							"key": "v",
+							"value": "{{v}}"
+						},
+						{
+							"key": "oauth_token",
+							"value": "{{oauth_token}}"
+						},
+						{
+							"key": "name",
+							"value": "MyGeofence",
+							"description": "REQUIRED A custom string that you can define to help you identify the set of geofences."
+						},
+						{
+							"key": "center",
+							"value": "40.7435179,-73.988242149",
+							"description": "REQUIRED A comma separated lat/lng coordinate."
+						},
+						{
+							"key": "radius",
+							"value": "100",
+							"description": "REQUIRED Area around the lat/lng that will trigger a geofence event. Default and miniumum radius is 50 meters with a max of 5000."
+						},
+						{
+							"key": "dwellTime",
+							"value": "5",
+							"description": "Number of minutes user needs to be inside of a geofence to trigger a dwell event. Default is 1 minute."
+						}
+					]
+				},
+				"description": "Create a geofence around any lat/lng coordinate."
+			},
+			"response": []
+		},
+		{
+			"name": "Add Geofences in Bulk",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.foursquare.com/v2/apps/{{client_id}}/geofences/addbulk?v={{v}}&oauth_token={{oauth_token}}&geofences=%5B%7B%22name%22%3A%22FavoriteCoffeeShop%22%2C%22venueId%22%3A%224b5901d3f964a520167828e3%22%2C%22dwellTime%22%3A5%2C%22radius%22%3A100%7D%2C%7B%22name%22%3A%22LatLngFence%22%2C%22dwellTime%22%3A10%2C%22radius%22%3A175%2C%22center%22%3A%2240.7001%2C-73.988%22%7D%5D",
+					"protocol": "https",
+					"host": [
+						"api",
+						"foursquare",
+						"com"
+					],
+					"path": [
+						"v2",
+						"apps",
+						"{{client_id}}",
+						"geofences",
+						"addbulk"
+					],
+					"query": [
+						{
+							"key": "v",
+							"value": "{{v}}"
+						},
+						{
+							"key": "oauth_token",
+							"value": "{{oauth_token}}"
+						},
+						{
+							"key": "geofences",
+							"value": "%5B%7B%22name%22%3A%22FavoriteCoffeeShop%22%2C%22venueId%22%3A%224b5901d3f964a520167828e3%22%2C%22dwellTime%22%3A5%2C%22radius%22%3A100%7D%2C%7B%22name%22%3A%22LatLngFence%22%2C%22dwellTime%22%3A10%2C%22radius%22%3A175%2C%22center%22%3A%2240.7001%2C-73.988%22%7D%5D",
+							"description": "REQUIRED Array of pilgrim geofence objects. Must be URL encoded."
+						},
+						{
+							"key": "replace",
+							"value": "true",
+							"description": "Replace all the existing geofence entries with the new geofences. Will append new geofences if false.",
+							"disabled": true
+						},
+						{
+							"key": "returnGeofences",
+							"value": "true",
+							"description": "Returns all created geofences in a JSON array.",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Bulk add up to 1000 geofence objects at the same time. A geofence object must have either one of venueId, categoryId, chainId, center, or polygon."
+			},
+			"response": []
+		},
+		{
+			"name": "Update a Geofence",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.foursquare.com/v2/apps/{{client_id}}/geofence/5e6a46cdeb85330008f0f5ab/update?v={{v}}&oauth_token={{oauth_token}}&name=MyGeofence",
+					"protocol": "https",
+					"host": [
+						"api",
+						"foursquare",
+						"com"
+					],
+					"path": [
+						"v2",
+						"apps",
+						"{{client_id}}",
+						"geofence",
+						"5e6a46cdeb85330008f0f5ab",
+						"update"
+					],
+					"query": [
+						{
+							"key": "v",
+							"value": "{{v}}"
+						},
+						{
+							"key": "oauth_token",
+							"value": "{{oauth_token}}"
+						},
+						{
+							"key": "name",
+							"value": "MyGeofence",
+							"description": "A custom string that you can set to help you identify the set of geofences."
+						},
+						{
+							"key": "radius",
+							"value": "100",
+							"description": "Area around the lat/lng that will trigger a geofence event. Default and miniumum radius is 50 meters with a max of 5000.",
+							"disabled": true
+						},
+						{
+							"key": "venueId",
+							"value": "44e9b421f964a520a5371fe3",
+							"description": "A single Foursquare venueId.",
+							"disabled": true
+						},
+						{
+							"key": "categoryId",
+							"value": "4d4b7104d754a06370d81259",
+							"description": "A single Foursquare category.",
+							"disabled": true
+						},
+						{
+							"key": "chainId",
+							"value": "556ce426aceaff43eb04e8a0",
+							"description": "A single Foursquare chainid.",
+							"disabled": true
+						},
+						{
+							"key": "dwellTime",
+							"value": "5",
+							"description": "Number of minutes user needs to be inside of a geofence to trigger a dwell event. Default is 1 minute.",
+							"disabled": true
+						},
+						{
+							"key": "center",
+							"value": "40.7435179,-73.988242149",
+							"description": "A comma separated lat/long coordinate.",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Update a geofence referenced by its geofenceId. A geofenceId is generated for all geofences and can be found in the Pilgrim Console."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a Geofence",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.foursquare.com/v2/apps/{{client_id}}/geofence/5e6a466ffa8f3a0008f7f147/delete?v={{v}}&oauth_token={{oauth_token}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"foursquare",
+						"com"
+					],
+					"path": [
+						"v2",
+						"apps",
+						"{{client_id}}",
+						"geofence",
+						"5e6a466ffa8f3a0008f7f147",
+						"delete"
+					],
+					"query": [
+						{
+							"key": "v",
+							"value": "{{v}}"
+						},
+						{
+							"key": "oauth_token",
+							"value": "{{oauth_token}}"
+						}
+					]
+				},
+				"description": "Delete a geofence referenced by its geofenceId. A geofenceId is generated for all geofences and can be found in the Pilgrim Console."
+			},
+			"response": []
+		},
+		{
+			"name": "Clear All Geofences",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.foursquare.com/v2/apps/{{client_id}}/geofences/clear?v={{v}}&oauth_token={{oauth_token}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"foursquare",
+						"com"
+					],
+					"path": [
+						"v2",
+						"apps",
+						"{{client_id}}",
+						"geofences",
+						"clear"
+					],
+					"query": [
+						{
+							"key": "v",
+							"value": "{{v}}"
+						},
+						{
+							"key": "oauth_token",
+							"value": "{{oauth_token}}"
+						}
+					]
+				},
+				"description": "Clears all created geofences."
+			},
+			"response": []
+		},
+		{
+			"name": "Get a Geofence",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.foursquare.com/v2/apps/{{client_id}}/geofence/5e6a466ffa8f3a0008f7f147/?v={{v}}&oauth_token={{oauth_token}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"foursquare",
+						"com"
+					],
+					"path": [
+						"v2",
+						"apps",
+						"{{client_id}}",
+						"geofence",
+						"5e6a466ffa8f3a0008f7f147",
+						""
+					],
+					"query": [
+						{
+							"key": "v",
+							"value": "{{v}}"
+						},
+						{
+							"key": "oauth_token",
+							"value": "{{oauth_token}}"
+						}
+					]
+				},
+				"description": "Get a geofence referenced by its geofenceId. A geofenceId is generated for all geofences and can be found in the Pilgrim Console."
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Geofences",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "addTokenTo",
+							"value": "queryParams",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.foursquare.com/v2/apps/{{client_id}}/geofences?v={{v}}&oauth_token={{oauth_token}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"foursquare",
+						"com"
+					],
+					"path": [
+						"v2",
+						"apps",
+						"{{client_id}}",
+						"geofences"
+					],
+					"query": [
+						{
+							"key": "v",
+							"value": "{{v}}"
+						},
+						{
+							"key": "oauth_token",
+							"value": "{{oauth_token}}"
+						}
+					]
+				},
+				"description": "Gets all created geofences."
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
